@@ -5,10 +5,17 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'App',
   mounted () {
-    // dispatch get items
+    this.getItems()
+  },
+  methods: {
+    ...mapActions([
+      'getItems'
+    ])
   }
 }
 </script>

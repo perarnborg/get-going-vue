@@ -23,6 +23,7 @@ function formData(data) {
 }
 
 function makeRequest(method, url, formData) {
+  url = '/static' + url
   return new Promise(function (resolve, reject) {
     var xhr = new XMLHttpRequest()
     xhr.open(method, url)

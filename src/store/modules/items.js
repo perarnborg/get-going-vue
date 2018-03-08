@@ -1,24 +1,25 @@
-import api from '@/services/api'
+import * as api from '@/services/api'
 
 const state = {
   items: null
 }
 
 const getters = {
-  allItems: state => state.all
+  allItems: state => state.items
 }
 
 const actions = {
-  getAllItems ({ commit }) {
-    api.getItems(items => {
-      commit('setItems', items)
-    })
+  getItems ({ commit }) {
+    api.getItems()
+      .then(items => {
+        commit('setItems', items)
+      })
   }
 }
 
 const mutations = {
   setItems (state, items) {
-    state.all = items
+    state.items = items
   }
 }
 
