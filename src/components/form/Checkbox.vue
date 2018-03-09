@@ -7,8 +7,8 @@
       <label class="Checkbox__text" :for="id">{{ text }}</label>
     </div>
 
-    <div v-if="error" class="Form-component-wrapper__error">
-      {{ error }}
+    <div v-if="validation && validation.$error" class="Form-component-wrapper__error">
+      {{ errorMessage }}
     </div>
   </div>
 </template>
@@ -20,28 +20,25 @@ export default {
     'label',
     'text',
     'value',
-    'isRequired',
-    'isSubmitted'
+    'validation'
   ],
   methods: {
     updateChecked: function (isChecked) {
-      let error = null
       this.isChecked = isChecked
-      if (this.isRequired && !this.isChecked) {
-        error = (this.isRequiredMessage || 'Obligatorisk kryssruta')
-      }
-      if (error !== this.error) {
-        this.error = error
-      }
+      this.$emit('touch')
       this.$emit('input', this.isChecked)
+    },
+    getErrorMessage: function(param) {
+      if (param === 'required') {
+        return 'Obligatorisk kryssruta'
+      }
+      return null
     }
   },
   data () {
     return {
       id: null,
-      isChecked: this.value,
-      error: null,
-      isTouched: false
+      isChecked: this.value
     }
   },
   mounted () {
@@ -51,17 +48,26 @@ export default {
     wrapperClasses: function() {
       return {
         'Form-component-wrapper': true,
-        'Form-component-wrapper--is-required': this.isRequired
+        'Form-component-wrapper--required': this.validation && this.validation.$params.required
       }
     },
     inputClasses: function() {
       return {
         'Checkbox': true,
-        'Checkbox--has-error': this.error
+        'Checkbox--has-error': this.validation && this.validation.$error
       }
     },
-    showError: function() {
-      return this.error && (this.isTouched || this.isSubmitted)
+    errorMessage: function() {
+      const self = this
+      let message
+      if (self.validation && self.validation.$error) {
+        Object.keys(self.validation.$params).forEach(function(param) {
+          if (!self.validation[param]) {
+            message = self.getErrorMessage(param)
+          }
+        })
+      }
+      return message
     }
   }
 }

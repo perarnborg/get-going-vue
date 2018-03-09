@@ -1,12 +1,27 @@
 <template>
   <div :class="wrapperClasses">
-    <label v-if="label" :for="id">{{ label }}</label>
+    <label v-if="label" :for="id">{{ label }}<span f-if="validation.$required">*</span></label>
 
-    <textarea v-if="type === 'textarea'" :id="id" :class="inputClasses" :value="value" @input="updateValue($event.target.value)" :placeholder="placeholder" :disabled="isDisabled"></textarea>
-    <input v-else type="type" :class="inputClasses" :value="value" @input="updateValue($event.target.value)" :placeholder="placeholder" :disabled="isDisabled" />
+    <textarea v-if="type === 'textarea'"
+      :id="id"
+      :class="inputClasses"
+      :value="value"
+      @input="updateValue($event.target.value)"
+      @blur="blur"
+      :placeholder="placeholder"
+      :disabled="disabled">
+    </textarea>
+    <input v-else
+      type="type"
+      :class="inputClasses"
+      :value="value"
+      @input="updateValue($event.target.value)"
+      @blur="blur"
+      :placeholder="placeholder"
+      :disabled="disabled" />
 
-    <div v-if="showError" class="Form-component-wrapper__error">
-      {{ error }}
+    <div v-if="validation && validation.$error" class="Form-component-wrapper__error">
+      {{ errorMessage }}
     </div>
   </div>
 </template>
@@ -19,30 +34,28 @@ export default {
     'label',
     'value',
     'placeholder',
-    'isRequired',
-    'isDisabled',
-    'isSubmitted'
+    'disabled',
+    'validation'
   ],
   methods: {
     updateValue: function (value) {
-      let error = null
-      if (value !== this.value) {
-        this.isTouched = true
-      }
-      if (this.isRequired && !value) {
-        error = (this.isRequiredMessage || 'Obligatoriskt fält')
-      }
-      if (error !== this.error) {
-        this.error = error
-      }
       this.$emit('input', value)
+    },
+    blur: function () {
+      this.$emit('touch')
+    },
+    getErrorMessage: function(param) {
+      if (param === 'email') {
+        return 'Invalid email'
+      } else if (param === 'required') {
+        return 'Obligatoriskt fält'
+      }
+      return null
     }
   },
   data () {
     return {
-      id: null,
-      error: null,
-      isTouched: false
+      id: null
     }
   },
   mounted () {
@@ -52,18 +65,27 @@ export default {
     wrapperClasses: function() {
       return {
         'Form-component-wrapper': true,
-        'Form-component-wrapper--is-required': this.isRequired
+        'Form-component-wrapper--required': this.validation && this.validation.$params.required
       }
     },
     inputClasses: function() {
       return {
         'Text-input': true,
-        'Text-input--has-error': this.error,
+        'Text-input--has-error': this.validation && this.validation.$error,
         'Text-input--textarea': this.type === 'textarea'
       }
     },
-    showError: function() {
-      return this.error && (this.isTouched || this.isSubmitted)
+    errorMessage: function() {
+      const self = this
+      let message
+      if (self.validation && self.validation.$error) {
+        Object.keys(self.validation.$params).forEach(function(param) {
+          if (!self.validation[param]) {
+            message = self.getErrorMessage(param)
+          }
+        })
+      }
+      return message
     }
   }
 }

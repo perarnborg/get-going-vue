@@ -1,8 +1,12 @@
 <template>
   <div>
     <h1>Start</h1>
-    <router-link to="/form-elements">Form elements</router-link>
-    <router-link to="/items">Items</router-link>
+    <div>
+      <router-link to="/form-elements">Form elements</router-link>
+    </div>
+    <div>
+      <router-link to="/items">Items</router-link>
+    </div>
   </div>
 </template>
 

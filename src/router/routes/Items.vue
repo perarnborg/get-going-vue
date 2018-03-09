@@ -1,13 +1,20 @@
 <template>
-  <div v-if="allItems">
-    <h1>Items</h1>
+  <div>
+    <div v-if="allItems">
+      <h1>Items</h1>
 
-    <div v-for="item in allItems" :key="item.id">
-      <router-link :to="/items/ + item.id">{{ item.title }}</router-link>
+      <router-link to="/">Back</router-link>
+
+      <br/>
+      <br/>
+
+      <div v-for="item in allItems" :key="item.id">
+        <router-link :to="/items/ + item.id">{{ item.title }}</router-link>
+      </div>
+
     </div>
-
+    <loader v-else></loader>
   </div>
-  <loader v-else></loader>
 </template>
 
 <script>

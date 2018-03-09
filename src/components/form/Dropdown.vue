@@ -6,8 +6,8 @@
       <option :value="option.value" :key="option.value" v-for="option in options">{{ option.text }}</option>
     </select>
 
-    <div v-if="error" class="Form-component-wrapper__error">
-      {{ error }}
+    <div v-if="validation && validation.$error" class="Form-component-wrapper__error">
+      {{ errorMessage }}
     </div>
   </div>
 </template>
@@ -19,28 +19,25 @@ export default {
     'label',
     'options',
     'value',
-    'isRequired',
-    'isSubmitted'
+    'validation'
   ],
   methods: {
     updateSelected: function (selectedValue) {
-      let error = null
       this.selectedValue = selectedValue
-      if (this.isRequired && !this.selectedValue) {
-        error = (this.isRequiredMessage || 'Obligatoriskt val')
-      }
-      if (error !== this.error) {
-        this.error = error
-      }
+      this.$emit('touch')
       this.$emit('input', this.selectedValue)
+    },
+    getErrorMessage: function(param) {
+      if (param === 'required') {
+        return 'Obligatoriskt val'
+      }
+      return null
     }
   },
   data () {
     return {
       id: null,
-      selectedValue: this.value,
-      error: null,
-      isTouched: false
+      selectedValue: this.value
     }
   },
   mounted () {
@@ -50,7 +47,7 @@ export default {
     wrapperClasses: function() {
       return {
         'Form-component-wrapper': true,
-        'Form-component-wrapper--is-required': this.isRequired
+        'Form-component-wrapper--is-required': this.validation && this.validation.$params.required
       }
     },
     inputClasses: function() {
@@ -59,8 +56,17 @@ export default {
         'Dropdown--has-error': this.error
       }
     },
-    showError: function() {
-      return this.error && (this.isTouched || this.isSubmitted)
+    errorMessage: function() {
+      const self = this
+      let message
+      if (self.validation && self.validation.$error) {
+        Object.keys(self.validation.$params).forEach(function(param) {
+          if (!self.validation[param]) {
+            message = self.getErrorMessage(param)
+          }
+        })
+      }
+      return message
     }
   }
 }

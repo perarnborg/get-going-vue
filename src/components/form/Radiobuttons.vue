@@ -7,8 +7,8 @@
       <label class="Radiobutton__text" :for="id + '_' + option.value">{{ option.text }}</label>
     </div>
 
-    <div v-if="error" class="Form-component-wrapper__error">
-      {{ error }}
+    <div v-if="validation && validation.$error" class="Form-component-wrapper__error">
+      {{ errorMessage }}
     </div>
   </div>
 </template>
@@ -20,28 +20,25 @@ export default {
     'label',
     'options',
     'value',
-    'isRequired',
-    'isSubmitted'
+    'validation'
   ],
   methods: {
     updateChecked: function (checkedValue) {
-      let error = null
       this.checkedValue = checkedValue
-      if (this.isRequired && !this.checkedValue) {
-        error = (this.isRequiredMessage || 'Obligatoriskt val')
-      }
-      if (error !== this.error) {
-        this.error = error
-      }
+      this.$emit('touch')
       this.$emit('input', this.checkedValue)
+    },
+    getErrorMessage: function(param) {
+      if (param === 'required') {
+        return 'Obligatoriskt val'
+      }
+      return null
     }
   },
   data () {
     return {
       id: null,
-      checkedValue: this.value,
-      error: null,
-      isTouched: false
+      checkedValue: this.value
     }
   },
   mounted () {
@@ -51,7 +48,7 @@ export default {
     wrapperClasses: function() {
       return {
         'Form-component-wrapper': true,
-        'Form-component-wrapper--is-required': this.isRequired
+        'Form-component-wrapper--is-required': this.validation && this.validation.$params.required
       }
     },
     inputClasses: function() {
@@ -60,8 +57,17 @@ export default {
         'Radiobutton--has-error': this.error
       }
     },
-    showError: function() {
-      return this.error && (this.isTouched || this.isSubmitted)
+    errorMessage: function() {
+      const self = this
+      let message
+      if (self.validation && self.validation.$error) {
+        Object.keys(self.validation.$params).forEach(function(param) {
+          if (!self.validation[param]) {
+            message = self.getErrorMessage(param)
+          }
+        })
+      }
+      return message
     }
   }
 }

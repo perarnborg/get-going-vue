@@ -1,30 +1,35 @@
 <template>
-  <div v-if="item">
-    <h1>Item</h1>
-    <router-link to="/items">Back</router-link>
-    <br/>
-    <br/>
-    {{ JSON.stringify(item) }}
-    <br/>
-    <br/>
-    <form novalidate="true" @submit.prevent="submitForm" v-if="itemFormData">
-      <text-input label="Title" placeholder="Enter a title" v-model="itemFormData.title" type="text" :validation="$v.itemFormData.title"></text-input>
+  <div>
+    <div v-if="item">
+      <h1>Item</h1>
+      <router-link to="/items">Back</router-link>
+      <br/>
+      <br/>
+      {{ JSON.stringify(item) }}
+      <br/>
+      <br/>
+      <form novalidate="true" @submit.prevent="submitForm" v-if="itemFormData">
+        <text-input label="Title" placeholder="Enter a title" v-model="itemFormData.title" type="text" :validation="$v.itemFormData.title" @touch="touchInput('title')"></text-input>
 
-      <text-input label="Email" placeholder="Enter an email" v-model="itemFormData.email" type="email" :validation="$v.itemFormData.email"></text-input>
+        <text-input label="Email" placeholder="Enter an email" v-model="itemFormData.email" type="email" :validation="$v.itemFormData.email" @touch="touchInput('email')"></text-input>
 
-      <button type="submit">Save</button>
-    </form>
+        <checkbox text="Checkad" v-model="itemFormData.is_active"></checkbox>
+
+        <button type="submit" :class="buttonClasses" :disabled="isSubmitting">Save</button>
+      </form>
+    </div>
+    <loader v-else></loader>
   </div>
-  <loader v-else></loader>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 import { required, email } from 'vuelidate/lib/validators'
+
+import { NETWORK_STATUSES } from '@/services/api'
 
 import TextInput from '@/components/form/TextInput'
 import Checkbox from '@/components/form/Checkbox'
-import Radiobuttons from '@/components/form/Radiobuttons'
-import Dropdown from '@/components/form/Dropdown'
 import Loader from '@/components/Loader'
 
 export default {
@@ -60,16 +65,40 @@ export default {
         this.itemFormData = {...this.item}
       }
     },
+    touchInput: function(key) {
+      this.$v.itemFormData[key].$touch()
+    },
     submitForm: function() {
-      console.log(this.$v.itemFormData.$invalid)
-    }
+      if (this.$v.itemFormData.$invalid) {
+        this.$v.itemFormData.$touch()
+      } else {
+        this.$v.itemFormData.$reset()
+        this.updateItem(this.itemFormData)
+      }
+    },
+    ...mapActions([
+      'updateItem'
+    ])
   },
   computed: {
     item() {
-      return this.$store.getters.getItem(this.itemId)
-    }
+      return this.getItem(this.itemId)
+    },
+    buttonClasses() {
+      return {
+        'Button': true,
+        'Button--loading': this.isSubmitting
+      }
+    },
+    isSubmitting: function() {
+      return this.getItemsNetworkStatus === NETWORK_STATUSES.SUBMITTING
+    },
+    ...mapGetters([
+      'getItem',
+      'getItemsNetworkStatus'
+    ])
   },
-  components: { TextInput, Checkbox, Radiobuttons, Dropdown, Loader }
+  components: { TextInput, Checkbox, Loader }
 }
 </script>
 
