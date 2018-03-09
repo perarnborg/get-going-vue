@@ -5,7 +5,15 @@ const state = {
 }
 
 const getters = {
-  allItems: state => state.items
+  allItems: state => state.items,
+  getItem: (state) => {
+    return (itemId) => {
+      if (state.items) {
+        return state.items.find(item => item.id === parseInt(itemId, 10))
+      }
+      return null
+    }
+  }
 }
 
 const actions = {

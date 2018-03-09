@@ -4,7 +4,7 @@ export function getItems() {
   return new Promise((resolve, reject) => {
     http.get('/items.json')
       .then(response => {
-        resolve(response)
+        resolve(JSON.parse(response))
       })
       .catch(error => {
         reject(error)

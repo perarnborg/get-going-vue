@@ -1,10 +1,14 @@
 [
   {
     "id": 1,
-    "title": "First item"
+    "title": "First item",
+    "email": "kontakt@perarnborg.se",
+    "is_active": true
   },
   {
     "id": 2,
-    "title": "Second item"
+    "title": "Second item",
+    "email": null,
+    "is_active": false
   }
 ]
