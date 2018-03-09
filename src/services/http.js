@@ -1,3 +1,11 @@
+export const NETWORK_STATUSES = {
+  WAITING: 'waiting',
+  GETTING: 'getting',
+  SUBMITTING: 'submitting',
+  SUCCESS: 'success',
+  ERROR: 'error'
+}
+
 export const get = function(url) {
   return makeRequest('get', url)
 }

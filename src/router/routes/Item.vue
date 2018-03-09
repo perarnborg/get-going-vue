@@ -26,7 +26,7 @@
 import { mapActions, mapGetters } from 'vuex'
 import { required, email } from 'vuelidate/lib/validators'
 
-import { NETWORK_STATUSES } from '@/services/api'
+import { NETWORK_STATUSES } from '@/services/http'
 
 import TextInput from '@/components/form/TextInput'
 import Checkbox from '@/components/form/Checkbox'

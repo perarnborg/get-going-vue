@@ -1,8 +1,9 @@
+import { NETWORK_STATUSES } from '@/services/http'
 import * as api from '@/services/api'
 
 const state = {
   items: null,
-  itemsNetworkStatus: api.NETWORK_STATUSES.WAITING
+  itemsNetworkStatus: NETWORK_STATUSES.WAITING
 }
 
 const getters = {
@@ -20,20 +21,20 @@ const getters = {
 
 const actions = {
   getItems ({ commit }) {
-    commit('setNetworkStatus', api.NETWORK_STATUSES.GETTING)
+    commit('setNetworkStatus', NETWORK_STATUSES.GETTING)
     api.getItems()
       .then(items => {
-        commit('setNetworkStatus', api.NETWORK_STATUSES.SUCCESS)
+        commit('setNetworkStatus', NETWORK_STATUSES.SUCCESS)
         commit('setItems', items)
       })
       .catch(() => {
-        commit('setNetworkStatus', api.NETWORK_STATUSES.ERROR)
+        commit('setNetworkStatus', NETWORK_STATUSES.ERROR)
       })
   },
   updateItem ({ dispatch, commit }, item) {
-    commit('setNetworkStatus', api.NETWORK_STATUSES.SUBMITTING)
+    commit('setNetworkStatus', NETWORK_STATUSES.SUBMITTING)
     setTimeout(() => {
-      commit('setNetworkStatus', api.NETWORK_STATUSES.SUCCESS)
+      commit('setNetworkStatus', NETWORK_STATUSES.SUCCESS)
       commit('setItem', item)
       dispatch('showInfo', 'Item saved')
     }, 1000)
