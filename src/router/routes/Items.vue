@@ -12,6 +12,10 @@
         <router-link :to="/items/ + item.id">{{ item.title }}</router-link>
       </div>
 
+      <br/>
+      <br/>
+      <router-link to="/items/create">Create new item</router-link>
+
     </div>
     <loader v-else></loader>
   </div>

@@ -3,8 +3,18 @@
     <div v-if="label">{{ label }}</div>
 
     <div :class="inputClasses" :key="option.value" v-for="option in options">
-      <input type="radio" :id="id + '_' + option.value" class="Radiobutton__input" :checked="value === option.value" :value="option.value" @change="updateChecked($event.target.value)" />
-      <label class="Radiobutton__text" :for="id + '_' + option.value">{{ option.text }}</label>
+      <input
+        type="radio"
+        :id="id + '_' + option.value"
+        class="Radiobutton__input"
+        :checked="value === option.value"
+        :value="option.value"
+        @change="updateChecked($event.target.value)" />
+      <label
+        class="Radiobutton__text"
+        :for="id + '_' + option.value">
+        {{ option.text }}
+      </label>
     </div>
 
     <div v-if="validation && validation.$error" class="Form-component-wrapper__error">
@@ -14,60 +24,29 @@
 </template>
 
 <script>
+import ForminputMixin from './Forminput'
+
 export default {
   name: 'Radiobuttons',
+  mixins: [ForminputMixin],
   props: [
-    'label',
-    'options',
-    'value',
-    'validation'
+    'options'
   ],
-  methods: {
-    updateChecked: function (checkedValue) {
-      this.checkedValue = checkedValue
-      this.$emit('touch')
-      this.$emit('input', this.checkedValue)
-    },
-    getErrorMessage: function(param) {
-      if (param === 'required') {
-        return 'Obligatoriskt val'
-      }
-      return null
-    }
-  },
-  data () {
-    return {
-      id: null,
-      checkedValue: this.value
-    }
-  },
-  mounted () {
-    this.id = this._uid
-  },
   computed: {
-    wrapperClasses: function() {
-      return {
-        'Form-component-wrapper': true,
-        'Form-component-wrapper--is-required': this.validation && this.validation.$params.required
-      }
-    },
     inputClasses: function() {
       return {
         'Radiobutton': true,
         'Radiobutton--has-error': this.error
       }
+    }
+  },
+  methods: {
+    updateChecked: function (checkedValue) {
+      this.$emit('touch')
+      this.$emit('input', checkedValue)
     },
-    errorMessage: function() {
-      const self = this
-      let message
-      if (self.validation && self.validation.$error) {
-        Object.keys(self.validation.$params).forEach(function(param) {
-          if (!self.validation[param]) {
-            message = self.getErrorMessage(param)
-          }
-        })
-      }
-      return message
+    getFieldNameInErrorMessage: function() {
+      return 'option'
     }
   }
 }

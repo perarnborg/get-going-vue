@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="item">
+    <div v-if="item || isNew">
       <h1>Item</h1>
       <router-link to="/items">Back</router-link>
       <br/>
@@ -8,12 +8,12 @@
       {{ JSON.stringify(item) }}
       <br/>
       <br/>
-      <form novalidate="true" @submit.prevent="submitForm" v-if="itemFormData">
-        <text-input label="Title" placeholder="Enter a title" v-model="itemFormData.title" type="text" :validation="$v.itemFormData.title" @touch="touchInput('title')"></text-input>
+      <form novalidate="true" @submit.prevent="submitForm" v-if="formData">
+        <text-input label="Title" placeholder="Enter a title" v-model="formData.title" type="text" :validation="$v.formData.title" @touch="touchInput('title')"></text-input>
 
-        <text-input label="Email" placeholder="Enter an email" v-model="itemFormData.email" type="email" :validation="$v.itemFormData.email" @touch="touchInput('email')"></text-input>
+        <text-input label="Email" placeholder="Enter an email" v-model="formData.email" type="email" :validation="$v.formData.email" @touch="touchInput('email')"></text-input>
 
-        <checkbox text="Checkad" v-model="itemFormData.is_active"></checkbox>
+        <checkbox text="Is Active" v-model="formData.is_active"></checkbox>
 
         <button type="submit" :class="buttonClasses" :disabled="isSubmitting">Save</button>
       </form>
@@ -28,22 +28,19 @@ import { required, email } from 'vuelidate/lib/validators'
 
 import { NETWORK_STATUSES } from '@/services/http'
 
+import FormMixin from '@/components/form/Form'
 import TextInput from '@/components/form/TextInput'
 import Checkbox from '@/components/form/Checkbox'
 import Loader from '@/components/Loader'
 
 export default {
   name: 'Item',
+  mixins: [FormMixin],
   props: [
     'itemId'
   ],
-  data: function() {
-    return {
-      itemFormData: null
-    }
-  },
   validations: {
-    itemFormData: {
+    formData: {
       title: {
         required
       },
@@ -53,42 +50,12 @@ export default {
       }
     }
   },
-  beforeUpdate() {
-    this.initForm()
-  },
-  mounted() {
-    this.initForm()
-  },
-  methods: {
-    initForm: function() {
-      if (!this.itemFormData && this.item) {
-        this.itemFormData = {...this.item}
-      }
-    },
-    touchInput: function(key) {
-      this.$v.itemFormData[key].$touch()
-    },
-    submitForm: function() {
-      if (this.$v.itemFormData.$invalid) {
-        this.$v.itemFormData.$touch()
-      } else {
-        this.$v.itemFormData.$reset()
-        this.updateItem(this.itemFormData)
-      }
-    },
-    ...mapActions([
-      'updateItem'
-    ])
-  },
   computed: {
+    isNew() {
+      return this.itemId === 'create'
+    },
     item() {
       return this.getItem(this.itemId)
-    },
-    buttonClasses() {
-      return {
-        'Button': true,
-        'Button--loading': this.isSubmitting
-      }
     },
     isSubmitting: function() {
       return this.getItemsNetworkStatus === NETWORK_STATUSES.SUBMITTING
@@ -96,6 +63,38 @@ export default {
     ...mapGetters([
       'getItem',
       'getItemsNetworkStatus'
+    ])
+  },
+  beforeUpdate() {
+    this.initForm(this.initialState())
+  },
+  mounted() {
+    this.initForm(this.initialState())
+  },
+  methods: {
+    initialState: function() {
+      if (this.isNew) {
+        return {
+          title: null,
+          email: null,
+          is_active: false
+        }
+      } else {
+        return this.item
+      }
+    },
+    submitForm: function() {
+      if (this.preSubmitForm()) {
+        if (this.isNew) {
+          this.createItem(this.formData)
+        } else {
+          this.updateItem(this.formData)
+        }
+      }
+    },
+    ...mapActions([
+      'updateItem',
+      'createItem'
     ])
   },
   components: { TextInput, Checkbox, Loader }

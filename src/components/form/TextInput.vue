@@ -27,16 +27,24 @@
 </template>
 
 <script>
+import ForminputMixin from './Forminput'
+
 export default {
   name: 'TextInput',
+  mixins: [ForminputMixin],
   props: [
     'type',
-    'label',
-    'value',
-    'placeholder',
-    'disabled',
-    'validation'
+    'placeholder'
   ],
+  computed: {
+    inputClasses: function() {
+      return {
+        'Text-input': true,
+        'Text-input--has-error': this.validation && this.validation.$error,
+        'Text-input--textarea': this.type === 'textarea'
+      }
+    }
+  },
   methods: {
     updateValue: function (value) {
       this.$emit('input', value)
@@ -44,48 +52,8 @@ export default {
     blur: function () {
       this.$emit('touch')
     },
-    getErrorMessage: function(param) {
-      if (param === 'email') {
-        return 'Invalid email'
-      } else if (param === 'required') {
-        return 'Obligatoriskt fält'
-      }
-      return null
-    }
-  },
-  data () {
-    return {
-      id: null
-    }
-  },
-  mounted () {
-    this.id = this._uid
-  },
-  computed: {
-    wrapperClasses: function() {
-      return {
-        'Form-component-wrapper': true,
-        'Form-component-wrapper--required': this.validation && this.validation.$params.required
-      }
-    },
-    inputClasses: function() {
-      return {
-        'Text-input': true,
-        'Text-input--has-error': this.validation && this.validation.$error,
-        'Text-input--textarea': this.type === 'textarea'
-      }
-    },
-    errorMessage: function() {
-      const self = this
-      let message
-      if (self.validation && self.validation.$error) {
-        Object.keys(self.validation.$params).forEach(function(param) {
-          if (!self.validation[param]) {
-            message = self.getErrorMessage(param)
-          }
-        })
-      }
-      return message
+    getFieldNameInErrorMessage: function() {
+      return 'field'
     }
   }
 }

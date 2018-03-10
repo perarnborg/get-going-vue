@@ -2,7 +2,10 @@
   <div :class="wrapperClasses">
     <label v-if="label" :for="id">{{ label }}</label>
 
-    <select :id="id" :class="inputClasses" @change="updateSelected($event.target.value)">
+    <select
+      :id="id"
+      :class="inputClasses"
+      @change="updateSelected($event.target.value)">
       <option :value="option.value" :key="option.value" v-for="option in options">{{ option.text }}</option>
     </select>
 
@@ -13,60 +16,29 @@
 </template>
 
 <script>
+import ForminputMixin from './Forminput'
+
 export default {
   name: 'Dropdown',
+  mixins: [ForminputMixin],
   props: [
-    'label',
-    'options',
-    'value',
-    'validation'
+    'options'
   ],
-  methods: {
-    updateSelected: function (selectedValue) {
-      this.selectedValue = selectedValue
-      this.$emit('touch')
-      this.$emit('input', this.selectedValue)
-    },
-    getErrorMessage: function(param) {
-      if (param === 'required') {
-        return 'Obligatoriskt val'
-      }
-      return null
-    }
-  },
-  data () {
-    return {
-      id: null,
-      selectedValue: this.value
-    }
-  },
-  mounted () {
-    this.id = this._uid
-  },
   computed: {
-    wrapperClasses: function() {
-      return {
-        'Form-component-wrapper': true,
-        'Form-component-wrapper--is-required': this.validation && this.validation.$params.required
-      }
-    },
     inputClasses: function() {
       return {
         'Dropdown': true,
         'Dropdown--has-error': this.error
       }
+    }
+  },
+  methods: {
+    updateSelected: function (selectedValue) {
+      this.$emit('touch')
+      this.$emit('input', selectedValue)
     },
-    errorMessage: function() {
-      const self = this
-      let message
-      if (self.validation && self.validation.$error) {
-        Object.keys(self.validation.$params).forEach(function(param) {
-          if (!self.validation[param]) {
-            message = self.getErrorMessage(param)
-          }
-        })
-      }
-      return message
+    getFieldNameInErrorMessage: function() {
+      return 'option'
     }
   }
 }
