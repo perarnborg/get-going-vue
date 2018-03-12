@@ -1,3 +1,5 @@
+import cloneDeep from 'clone-deep'
+
 export default {
   data: function() {
     return {
@@ -15,11 +17,24 @@ export default {
   methods: {
     initForm: function(initialState) {
       if (!this.formData && initialState) {
-        this.formData = {...this.item}
+        this.formData = cloneDeep(initialState)
       }
     },
-    touchInput: function(key) {
-      this.$v.formData[key].$touch()
+    touchInput: function(key, index = null, attr = null) {
+      if (index !== null && attr !== null) {
+        this.$v.formData[key].$each[index][attr].$touch()
+      } else {
+        this.$v.formData[key].$touch()
+      }
+    },
+    getNextId: function(list) {
+      let nextId = 1
+      if (list.length) {
+        nextId = list.reduce((a, b) => {
+          return Math.max(a.id, b.id)
+        }).id + 1
+      }
+      return nextId
     },
     preSubmitForm: function() {
       if (this.$v.formData.$invalid) {

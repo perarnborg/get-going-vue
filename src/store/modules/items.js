@@ -67,14 +67,14 @@ const mutations = {
     const index = state.items.findIndex(i => i.id === item.id)
     state.items = [
       ...state.items.slice(0, index),
-      {...item},
+      item,
       ...state.items.slice(index + 1)
     ]
   },
   insertItem (state, item) {
     state.items = [
       ...state.items,
-      {...item}
+      item
     ]
   },
   setNetworkStatus (state, status) {

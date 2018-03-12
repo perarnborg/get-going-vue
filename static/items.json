@@ -3,12 +3,19 @@
     "id": 1,
     "title": "First item",
     "email": "kontakt@perarnborg.se",
-    "is_active": true
+    "is_active": true,
+    "sub_items": [{
+      "id": 1,
+      "title": "A sub item",
+      "quantity": 1,
+      "price": 1.00
+    }]
   },
   {
     "id": 2,
     "title": "Second item",
     "email": null,
-    "is_active": false
+    "is_active": false,
+    "sub_items": []
   }
 ]
