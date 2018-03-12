@@ -49,14 +49,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import { required, email, numeric } from 'vuelidate/lib/validators' // TODO: integer and decimal validations on their way
 
 import { NETWORK_STATUSES } from '@/services/http'
-
 import FormMixin from '@/components/form/Form'
 import TextInput from '@/components/form/TextInput'
 import Checkbox from '@/components/form/Checkbox'
 import Loader from '@/components/Loader'
+import { newItem, newSubItem, itemValidations } from '@/models/item'
 
 export default {
   name: 'Item',
@@ -65,31 +64,7 @@ export default {
     'itemId'
   ],
   validations: {
-    formData: {
-      title: {
-        required
-      },
-      email: {
-        required,
-        email
-      },
-      sub_items: {
-        required,
-        $each: {
-          title: {
-            required
-          },
-          quantity: {
-            required,
-            numeric
-          },
-          price: {
-            required,
-            numeric
-          }
-        }
-      }
-    }
+    formData: itemValidations
   },
   computed: {
     isNew() {
@@ -115,23 +90,13 @@ export default {
   methods: {
     initialState: function() {
       if (this.isNew) {
-        return {
-          title: null,
-          email: null,
-          is_active: false,
-          sub_items: []
-        }
+        return newItem()
       } else {
         return this.item
       }
     },
     insertSubItem: function() {
-      this.formData.sub_items.push({
-        id: this.getNextId(this.formData.sub_items),
-        title: null,
-        quantity: null,
-        price: null
-      })
+      this.formData.sub_items.push(newSubItem(this.formData))
     },
     submitForm: function() {
       if (this.preSubmitForm()) {

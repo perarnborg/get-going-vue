@@ -27,15 +27,6 @@ export default {
         this.$v.formData[key].$touch()
       }
     },
-    getNextId: function(list) {
-      let nextId = 1
-      if (list.length) {
-        nextId = list.reduce((a, b) => {
-          return Math.max(a.id, b.id)
-        }).id + 1
-      }
-      return nextId
-    },
     preSubmitForm: function() {
       if (this.$v.formData.$invalid) {
         this.$v.formData.$touch()

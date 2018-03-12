@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import items from './modules/items'
-import message from './modules/message'
+import itemsStore from './modules/items-store'
+import messageStore from './modules/message-store'
 
 Vue.use(Vuex)
 
@@ -9,8 +9,8 @@ const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store({
   modules: {
-    items,
-    message
+    itemsStore,
+    messageStore
   },
   strict: debug
 })
