@@ -12,7 +12,7 @@
       :disabled="disabled">
     </textarea>
     <input v-else
-      type="type"
+      :type="type"
       :class="inputClasses"
       :value="value"
       @input="updateValue($event.target.value)"
