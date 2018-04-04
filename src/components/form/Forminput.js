@@ -24,7 +24,8 @@ export default {
       if (self.validation && self.validation.$error) {
         Object.keys(self.validation.$params).forEach(function(param) {
           if (!self.validation[param]) {
-            message = self.getErrorMessage(param)
+            console.log(self.validation.$params[param])
+            message = self.getErrorMessage(param, self.validation.$params[param])
           }
         })
       }
@@ -35,17 +36,19 @@ export default {
     this.id = this._uid
   },
   methods: {
-    getErrorMessage: function(param, inputType = null) {
+    getErrorMessage: function(param, paramData) {
       if (param === 'email') {
-        return 'Invalid email'
+        return 'Ogiltig e-postadress'
       } else if (param === 'required') {
-        return 'Required ' + this.getFieldNameInErrorMessage()
+        return 'Obligatorisk ' + this.getFieldNameInErrorMessage()
       } else if (param === 'numeric') {
-        return 'Not a valid number'
+        return 'Inte ett giltigt nummer'
       } else if (param === 'integer') {
-        return 'Should be a whole number'
+        return 'Måste vara ett heltal'
       } else if (param === 'decimal') {
-        return 'Not a valid number'
+        return 'Inte ett giltigt belopp'
+      } else if (param === 'minLength') {
+        return 'Måste vara minst ' + paramData.min + ' tecken'
       }
       return null
     }
