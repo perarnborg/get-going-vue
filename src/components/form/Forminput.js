@@ -24,7 +24,6 @@ export default {
       if (self.validation && self.validation.$error) {
         Object.keys(self.validation.$params).forEach(function(param) {
           if (!self.validation[param]) {
-            console.log(self.validation.$params[param])
             message = self.getErrorMessage(param, self.validation.$params[param])
           }
         })
