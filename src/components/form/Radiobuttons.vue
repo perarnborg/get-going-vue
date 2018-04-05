@@ -30,8 +30,14 @@ export default {
   name: 'Radiobuttons',
   mixins: [ForminputMixin],
   props: [
-    'options'
+    'options',
+    'type'
   ],
+  data () {
+    return {
+      checkedValue: this.value
+    }
+  },
   computed: {
     inputClasses: function() {
       return {
@@ -42,8 +48,15 @@ export default {
   },
   methods: {
     updateChecked: function (checkedValue) {
+      if (this.type === 'boolean') {
+        this.checkedValue = checkedValue === 'true'
+      } else if (this.type === 'integer') {
+        this.checkedValue = parseInt(checkedValue, 10)
+      } else {
+        this.checkedValue = checkedValue
+      }
       this.$emit('touch')
-      this.$emit('input', checkedValue)
+      this.$emit('input', this.checkedValue)
     },
     getFieldNameInErrorMessage: function() {
       return 'option'
