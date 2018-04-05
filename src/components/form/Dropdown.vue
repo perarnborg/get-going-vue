@@ -6,7 +6,7 @@
       :id="id"
       :class="inputClasses"
       @change="updateSelected($event.target.value)">
-      <option :value="option.value" :key="option.value" v-for="option in options">{{ option.text }}</option>
+      <option :value="option.value" :key="option.value" :selected="value === option.value" v-for="option in options">{{ option.text }}</option>
     </select>
 
     <div v-if="validation && validation.$error" class="Form-component-wrapper__error">
