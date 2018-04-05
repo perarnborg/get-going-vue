@@ -1,6 +1,6 @@
 <template>
   <div :class="wrapperClasses">
-    <label v-if="label" :for="id">{{ label }}<span f-if="validation.$required">*</span></label>
+    <label v-if="label" :for="id">{{ label }}<span v-if="validation.required">*</span></label>
 
     <textarea v-if="type === 'textarea'"
       :id="id"
