@@ -13,9 +13,10 @@
       @change="updateSelected($event.target.value)"
     >
       <option
+        v-for="option in options"
         :value="option.value"
         :key="option.value"
-        v-for="option in options"
+        :selected="value === option.value"
       >
         {{ option.text }}
       </option>

@@ -52,7 +52,7 @@ export default {
   methods: {
     updateChecked: function (checkedValue) {
       this.$emit('touch')
-      this.$emit('input', checkedValue)
+      this.$emit('input', this.checkedValue)
     }
   }
 }
