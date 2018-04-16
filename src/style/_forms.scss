@@ -1,3 +1,20 @@
+%label {
+  font-weight: bold;
+}
+
 %form-component-wrapper {
   text-align: left;
+
+  label {
+    @extend %label;
+  }
+}
+
+.Field {
+  display: none;
+
+  &__label {
+    @extend %label;
+    color: red;
+  }
 }

@@ -1,5 +1,8 @@
 <template>
-  <div class="Loader">
+  <div
+    v-if="visible"
+    class="Loader"
+  >
     <div class="Loader__bounce Loader__bounce--1"></div>
     <div class="Loader__bounce Loader__bounce--2"></div>
   </div>
@@ -7,7 +10,20 @@
 
 <script>
 export default {
-  name: 'Loader'
+  name: 'PreLoader',
+  data: function() {
+    return {
+      visible: false
+    }
+  },
+  mounted () {
+    setTimeout(() => {
+      this.visible = true
+    }, 500)
+  },
+  destroyed () {
+    this.visible = false
+  }
 }
 </script>
 
@@ -22,7 +38,7 @@ export default {
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      background-color: $accent-color;
+      background-color: $action-color;
       opacity: 0.6;
       position: absolute;
       top: 0;

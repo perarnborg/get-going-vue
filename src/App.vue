@@ -1,15 +1,15 @@
 <template>
-  <div id="app">
+  <div id="app" class="App">
     <router-view/>
 
-    <message></message>
+    <AppMessage />
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 
-import Message from '@/components/Message'
+import AppMessage from '@/components/AppMessage'
 
 export default {
   name: 'App',
@@ -21,7 +21,7 @@ export default {
       'getItems'
     ])
   },
-  components: { Message }
+  components: { AppMessage }
 }
 </script>
 
@@ -30,7 +30,7 @@ body {
  @extend %body;
 }
 
-#app {
+.App {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

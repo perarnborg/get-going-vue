@@ -17,14 +17,14 @@
       <router-link to="/items/create">Create new item</router-link>
 
     </div>
-    <loader v-else></loader>
+    <PreLoader v-else />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 
-import Loader from '@/components/Loader'
+import PreLoader from '@/components/PreLoader'
 
 export default {
   name: 'Items',
@@ -33,7 +33,7 @@ export default {
       'allItems'
     ])
   },
-  components: { Loader }
+  components: { PreLoader }
 }
 </script>
 

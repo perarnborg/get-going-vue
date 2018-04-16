@@ -17,21 +17,26 @@
       </label>
     </div>
 
-    <div v-if="validation && validation.$error" class="Form-component-wrapper__error">
+    <div
+      v-if="validation && validation.$error"
+      class="Form-component-wrapper__error"
+    >
       {{ errorMessage }}
     </div>
   </div>
 </template>
 
 <script>
-import ForminputMixin from './Forminput'
+import InputMixin from './InputMixin'
 
 export default {
-  name: 'Checkbox',
-  mixins: [ForminputMixin],
-  props: [
-    'text'
-  ],
+  name: 'CheckboxInput',
+  mixins: [InputMixin],
+  props: {
+    text: {
+      type: String
+    }
+  },
   data () {
     return {
       isChecked: this.value
@@ -50,9 +55,6 @@ export default {
       this.isChecked = isChecked
       this.$emit('touch')
       this.$emit('input', this.isChecked)
-    },
-    getFieldNameInErrorMessage: function() {
-      return 'checkbox'
     }
   }
 }

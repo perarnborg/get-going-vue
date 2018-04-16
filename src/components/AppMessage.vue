@@ -1,6 +1,9 @@
 <template>
   <transition name="fade">
-    <div v-if="getMessage" :class="classes">
+    <div
+      v-if="getMessage"
+      :class="classes"
+    >
       <div class="Message__inner">
         {{ getMessage.text }}
       </div>
@@ -12,7 +15,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'Message',
+  name: 'AppMessage',
   computed: {
     classes: function() {
       return {

@@ -1,26 +1,41 @@
 <template>
   <div :class="wrapperClasses">
-    <label v-if="label" :for="id">{{ label }}</label>
+    <label
+      v-if="label"
+      :for="id"
+    >
+      {{ label }}
+    </label>
 
     <select
       :id="id"
       :class="inputClasses"
-      @change="updateSelected($event.target.value)">
-      <option :value="option.value" :key="option.value" v-for="option in options">{{ option.text }}</option>
+      @change="updateSelected($event.target.value)"
+    >
+      <option
+        :value="option.value"
+        :key="option.value"
+        v-for="option in options"
+      >
+        {{ option.text }}
+      </option>
     </select>
 
-    <div v-if="validation && validation.$error" class="Form-component-wrapper__error">
+    <div
+      v-if="validation && validation.$error"
+      class="Form-component-wrapper__error"
+    >
       {{ errorMessage }}
     </div>
   </div>
 </template>
 
 <script>
-import ForminputMixin from './Forminput'
+import InputMixin from './InputMixin'
 
 export default {
-  name: 'Dropdown',
-  mixins: [ForminputMixin],
+  name: 'DropdownInput',
+  mixins: [InputMixin],
   props: [
     'options'
   ],
@@ -36,9 +51,6 @@ export default {
     updateSelected: function (selectedValue) {
       this.$emit('touch')
       this.$emit('input', selectedValue)
-    },
-    getFieldNameInErrorMessage: function() {
-      return 'option'
     }
   }
 }

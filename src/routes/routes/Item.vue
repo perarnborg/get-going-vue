@@ -9,20 +9,61 @@
       <br/>
       <br/>
       <form novalidate="true" @submit.prevent="submitForm" v-if="formData">
-        <text-input label="Title" placeholder="Enter a title" v-model="formData.title" type="text" :validation="$v.formData.title" @touch="touchInput('title')"></text-input>
+        <TextInput
+          label="Title"
+          placeholder="Enter a title"
+          v-model="formData.title"
+          type="text"
+          :validation="$v.formData.title"
+          @touch="touchInput('title')"
+        />
 
-        <text-input label="Email" placeholder="Enter an email" v-model="formData.email" type="email" :validation="$v.formData.email" @touch="touchInput('email')"></text-input>
+        <TextInput
+          label="Email"
+          placeholder="Enter an email"
+          v-model="formData.email"
+          type="email"
+          :validation="$v.formData.email"
+          @touch="touchInput('email')"
+        />
 
-        <checkbox text="Is Active" v-model="formData.is_active"></checkbox>
+        <CheckboxInput
+          text="Is Active"
+          v-model="formData.is_active"
+        />
 
-        <div v-for="(subItem, index) in formData.sub_items" :key="subItem.id">
+        <div
+          v-for="(subItem, index) in formData.sub_items"
+          :key="subItem.id"
+        >
           <hr/>
 
-          <text-input label="Title" placeholder="Enter a title" v-model="subItem.title" :validation="$v.formData.sub_items.$each[index].title" @touch="touchInput('sub_items', index, 'title')" type="text"></text-input>
+          <TextInput
+            label="Title"
+            placeholder="Enter a title"
+            v-model="subItem.title"
+            :validation="$v.formData.sub_items.$each[index].title"
+            @touch="touchInput('sub_items', index, 'title')"
+            type="text"
+          />
 
-          <text-input label="Quantity" placeholder="Enter a quantity" v-model="subItem.quantity" :validation="$v.formData.sub_items.$each[index].quantity" @touch="touchInput('sub_items', index, 'quantity')" type="text"></text-input>
+          <TextInput
+            label="Quantity"
+            placeholder="Enter a quantity"
+            v-model="subItem.quantity"
+            :validation="$v.formData.sub_items.$each[index].quantity"
+            @touch="touchInput('sub_items', index, 'quantity')"
+            type="text"
+          />
 
-          <text-input label="Title" placeholder="Enter a price" v-model="subItem.price" :validation="$v.formData.sub_items.$each[index].price" @touch="touchInput('sub_items', index, 'price')" type="text"></text-input>
+          <TextInput
+            label="Title"
+            placeholder="Enter a price"
+            v-model="subItem.price"
+            :validation="$v.formData.sub_items.$each[index].price"
+            @touch="touchInput('sub_items', index, 'price')"
+            type="text"
+          />
         </div>
 
         <hr/>
@@ -36,14 +77,20 @@
         <br/>
         <br/>
 
-        <button type="submit" :class="buttonClasses" :disabled="isSubmitting">Save</button>
+        <button
+          type="submit"
+          :class="buttonClasses"
+          :disabled="isSubmitting"
+        >
+          Save
+        </button>
 
         <div v-if="$v.$error">
           Some of the form fields are invalid.
         </div>
       </form>
     </div>
-    <loader v-else></loader>
+    <PreLoader v-else />
   </div>
 </template>
 
@@ -51,10 +98,10 @@
 import { mapActions, mapGetters } from 'vuex'
 
 import { NETWORK_STATUSES } from '@/services/http'
-import FormMixin from '@/components/form/Form'
+import FormMixin from '@/components/form/FormMixin'
 import TextInput from '@/components/form/TextInput'
-import Checkbox from '@/components/form/Checkbox'
-import Loader from '@/components/Loader'
+import CheckboxInput from '@/components/form/CheckboxInput'
+import PreLoader from '@/components/PreLoader'
 import { newItem, newSubItem, itemValidations } from '@/models/item'
 
 export default {
@@ -112,7 +159,7 @@ export default {
       'createItem'
     ])
   },
-  components: { TextInput, Checkbox, Loader }
+  components: { TextInput, CheckboxInput, PreLoader }
 }
 </script>
 

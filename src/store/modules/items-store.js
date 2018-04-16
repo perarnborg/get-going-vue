@@ -1,6 +1,6 @@
 import { NETWORK_STATUSES } from '@/services/http'
 import * as api from '@/services/api'
-import router from '@/router'
+import router from '@/routes/router'
 
 const state = {
   items: null,

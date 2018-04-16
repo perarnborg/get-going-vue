@@ -1,10 +1,21 @@
 export default {
-  props: [
-    'label',
-    'value',
-    'validation',
-    'disabled'
-  ],
+  props: {
+    label: {
+      type: String
+    },
+    value: {
+      type: [Boolean, Number, String]
+    },
+    validation: {
+      type: Object
+    },
+    requiredErrorMessage: {
+      type: String
+    },
+    disabled: {
+      type: Boolean
+    }
+  },
   data () {
     return {
       id: null
@@ -39,7 +50,7 @@ export default {
       if (param === 'email') {
         return 'Invalid email'
       } else if (param === 'required') {
-        return 'Required ' + this.getFieldNameInErrorMessage()
+        return this.requiredErrorMessage ? this.requiredErrorMessage : 'Required field'
       } else if (param === 'numeric') {
         return 'Not a valid number'
       } else if (param === 'integer') {

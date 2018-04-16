@@ -1,8 +1,15 @@
 <template>
   <div :class="wrapperClasses">
-    <label v-if="label" :for="id">{{ label }}<span f-if="validation.$required">*</span></label>
+    <label
+      v-if="label"
+      :for="id"
+    >
+      {{ label }}
+      <span f-if="validation.$required">*</span>
+    </label>
 
-    <textarea v-if="type === 'textarea'"
+    <textarea
+      v-if="type === 'textarea'"
       :id="id"
       :class="inputClasses"
       :value="value"
@@ -18,20 +25,24 @@
       @input="updateValue($event.target.value)"
       @blur="blur"
       :placeholder="placeholder"
-      :disabled="disabled" />
+      :disabled="disabled"
+    />
 
-    <div v-if="validation && validation.$error" class="Form-component-wrapper__error">
+    <div
+      v-if="validation && validation.$error"
+      class="Form-component-wrapper__error"
+    >
       {{ errorMessage }}
     </div>
   </div>
 </template>
 
 <script>
-import ForminputMixin from './Forminput'
+import InputMixin from './InputMixin'
 
 export default {
   name: 'TextInput',
-  mixins: [ForminputMixin],
+  mixins: [InputMixin],
   props: [
     'type',
     'placeholder'
@@ -51,9 +62,6 @@ export default {
     },
     blur: function () {
       this.$emit('touch')
-    },
-    getFieldNameInErrorMessage: function() {
-      return 'field'
     }
   }
 }

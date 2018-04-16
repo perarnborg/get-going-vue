@@ -6,7 +6,7 @@ import 'core-js/fn/promise'
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
 import App from './App'
-import router from './router'
+import router from './routes/router'
 import store from './store'
 
 Vue.config.productionTip = false
